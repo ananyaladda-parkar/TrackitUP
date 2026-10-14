@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TrackitUP</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600&family=Zilla+Slab:wght@500;600&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <p class="brand">TrackitUP</p>
+      <nav aria-label="Main">
+        <a data-route="overview" href="#/overview">Overview</a>
+        <a data-route="transactions" href="#/transactions">Transactions</a>
+        <a data-route="add" href="#/add">Add</a>
+        <a data-route="reports" href="#/reports">Reports</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+
+    <!-- Overview: summary(), largest_expense(), get_all_transactions() -->
+    <section id="view-overview" class="sheet" hidden>
+      <h1 id="title-overview" tabindex="-1">Overview</h1>
+
+      <div id="figure-balance-box" class="balance-block">
+        <p class="small-label">Balance</p>
+        <p id="figure-balance" class="balance-figure">0.00</p>
+        <p id="balance-note" class="balance-note"></p>
+      </div>
+
+      <div class="split">
+        <div id="split-bar" class="split-bar" role="img" aria-label="No income or expenses yet">
+          <span id="split-income" class="split-income"></span>
+          <span id="split-expense" class="split-expense"></span>
+        </div>
+        <dl class="split-legend">
+          <div><dt><span class="swatch swatch-income"></span>Income</dt><dd id="figure-income">0.00</dd></div>
+          <div><dt><span class="swatch swatch-expense"></span>Expenses</dt><dd id="figure-expenses">0.00</dd></div>
+        </dl>
+      </div>
+
+      <div class="two-col">
+        <section aria-labelledby="heading-largest">
+          <h2 id="heading-largest">Largest expense</h2>
+          <div id="largest-expense"></div>
+        </section>
+        <section aria-labelledby="heading-recent">
+          <h2 id="heading-recent">Latest entries</h2>
+          <ul id="recent-list" class="ledger-list"></ul>
+          <p class="more-link"><a href="#/transactions">See all transactions</a></p>
+        </section>
+      </div>
+    </section>
+
+    <!-- Transactions: get_all_transactions(), delete_transaction() -->
+    <section id="view-transactions" class="sheet" hidden>
+      <h1 id="title-transactions" tabindex="-1">Transactions</h1>
+      <p class="intro">The number is the row's position in transactions.csv. When you delete a row, the rows below it move up by one.</p>
+
+      <div id="transactions-empty" class="empty" hidden>
+        <p>No transactions yet.</p>
+        <p><a href="#/add">Add your first transaction</a></p>
+      </div>
+
+      <table id="transactions-table" class="ledger-table" hidden>
+        <thead>
+          <tr>
+            <th scope="col">No.</th>
+            <th scope="col">Date</th>
+            <th scope="col">Type</th>
+            <th scope="col">Category</th>
+            <th scope="col">Note</th>
+            <th scope="col" class="num">Amount</th>
+            <th scope="col"><span class="visually-hidden">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody id="transactions-body"></tbody>
+      </table>
+    </section>
+
+    <!-- Add: add_transaction() -->
+    <section id="view-add" class="sheet" hidden>
+      <h1 id="title-add" tabindex="-1">Add a transaction</h1>
+
+      <form id="add-form" class="form-grid" novalidate>
+        <div class="field">
+          <label for="add-date">Date</label>
+          <input id="add-date" name="date" type="date" required>
+        </div>
+        <div class="field">
+          <label for="add-type">Type</label>
+          <select id="add-type" name="type">
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="add-category">Category</label>
+          <input id="add-category" name="category" type="text" autocomplete="off" placeholder="food, rent, salary">
+        </div>
+        <div class="field">
+          <label for="add-amount">Amount</label>
+          <input id="add-amount" name="amount" type="text" inputmode="decimal" autocomplete="off" placeholder="250 or 99.50">
+        </div>
+        <div class="field field-wide">
+          <label for="add-note">Note (optional)</label>
+          <input id="add-note" name="note" type="text" autocomplete="off">
+        </div>
+        <div class="field-wide form-actions">
+          <button id="add-submit" class="btn btn-green" type="submit">Add transaction</button>
+        </div>
+      </form>
+
+      <p id="add-result" class="form-result" role="status" aria-live="polite" hidden></p>
+    </section>
+
+    <!-- Reports: category_report(), monthly_report() -->
+    <section id="view-reports" class="sheet" hidden>
+      <h1 id="title-reports" tabindex="-1">Reports</h1>
+
+      <div class="two-col">
+        <section aria-labelledby="heading-cat-expense">
+          <h2 id="heading-cat-expense">Expenses by category</h2>
+          <div id="category-expense"></div>
+        </section>
+        <section aria-labelledby="heading-cat-income">
+          <h2 id="heading-cat-income">Income by category</h2>
+          <div id="category-income"></div>
+        </section>
+      </div>
+
+      <section class="month-block" aria-labelledby="heading-month">
+        <h2 id="heading-month">Month summary</h2>
+        <form id="month-form" class="month-form" novalidate>
+          <div class="field">
+            <label for="month-input">Month (YYYY-MM)</label>
+            <input id="month-input" type="text" autocomplete="off" placeholder="2026-10">
+          </div>
+          <button class="btn btn-blue" type="submit">Show month</button>
+        </form>
+        <p id="month-error" class="field-error" role="alert" hidden></p>
+        <div id="month-result"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
