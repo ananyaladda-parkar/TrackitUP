@@ -1,5 +1,3 @@
-# Member 3 - Storage (reads and writes the CSV file)
-
 import csv
 import os
 
