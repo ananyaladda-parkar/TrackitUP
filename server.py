@@ -11,7 +11,7 @@ import traceback
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, unquote, urlparse
 
-import transaction_services as service
+import transaction_service as service
 
 HOST = "127.0.0.1"
 DEFAULT_PORT = 8000
